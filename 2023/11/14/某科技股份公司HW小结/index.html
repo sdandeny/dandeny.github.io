@@ -1,0 +1,195 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>某科技股份公司HW小结 | dandeny's blog</title><meta name="author" content="dandeny"><meta name="copyright" content="dandeny"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="前期打点通过前期的信息收集收集到Solr RCE，华为云AK&#x2F;SK，致远OA弱口令-&gt;后台RCE三个点。 Solr RCE刚开始通过hunter收集资产时发现一个站点标题中有个Solr Admin的图标  后面利用CVE-2019-17558拿下服务器权限进入内网，但进入内网后可达网段和资产都很少，并且IP所属区域不属于当前公司所在区域，猜测可能打到子公司下（通过爱企查发现存在多家控股子公司">
+<meta property="og:type" content="article">
+<meta property="og:title" content="某科技股份公司HW小结">
+<meta property="og:url" content="http://example.com/2023/11/14/%E6%9F%90%E7%A7%91%E6%8A%80%E8%82%A1%E4%BB%BD%E5%85%AC%E5%8F%B8HW%E5%B0%8F%E7%BB%93/index.html">
+<meta property="og:site_name" content="dandeny&#39;s blog">
+<meta property="og:description" content="前期打点通过前期的信息收集收集到Solr RCE，华为云AK&#x2F;SK，致远OA弱口令-&gt;后台RCE三个点。 Solr RCE刚开始通过hunter收集资产时发现一个站点标题中有个Solr Admin的图标  后面利用CVE-2019-17558拿下服务器权限进入内网，但进入内网后可达网段和资产都很少，并且IP所属区域不属于当前公司所在区域，猜测可能打到子公司下（通过爱企查发现存在多家控股子公司">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/images/bg/71wgohfPHqXRbG9.png">
+<meta property="article:published_time" content="2023-11-14T02:33:45.000Z">
+<meta property="article:modified_time" content="2023-11-16T09:01:54.469Z">
+<meta property="article:author" content="dandeny">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/images/bg/71wgohfPHqXRbG9.png"><link rel="shortcut icon" href="/images/bg/941d9457d1adf41dd8022e5edbc284a1.jpg"><link rel="canonical" href="http://example.com/2023/11/14/%E6%9F%90%E7%A7%91%E6%8A%80%E8%82%A1%E4%BB%BD%E5%85%AC%E5%8F%B8HW%E5%B0%8F%E7%BB%93/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '某科技股份公司HW小结',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2023-11-16 17:01:54'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/images/bg/941d9457d1adf41dd8022e5edbc284a1.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">6</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/images/bg/71wgohfPHqXRbG9.png')"><nav id="nav"><span id="blog-info"><a href="/" title="dandeny's blog"><span class="site-name">dandeny's blog</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">某科技股份公司HW小结</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2023-11-14T02:33:45.000Z" title="发表于 2023-11-14 10:33:45">2023-11-14</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2023-11-16T09:01:54.469Z" title="更新于 2023-11-16 17:01:54">2023-11-16</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="某科技股份公司HW小结"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="前期打点"><a href="#前期打点" class="headerlink" title="前期打点"></a>前期打点</h2><p>通过前期的信息收集收集到<code>Solr RCE</code>，<code>华为云AK/SK</code>，<code>致远OA弱口令-&gt;后台RCE</code>三个点。</p>
+<h3 id="Solr-RCE"><a href="#Solr-RCE" class="headerlink" title="Solr RCE"></a>Solr RCE</h3><p>刚开始通过hunter收集资产时发现一个站点标题中有个<code>Solr Admin</code>的图标</p>
+<p><img src="/images/content/Snipaste_2023-11-13_10-03-50.png" alt="Snipaste_2023-11-13_10-03-50"></p>
+<p>后面利用<code>CVE-2019-17558</code>拿下服务器权限进入内网，但进入内网后可达网段和资产都很少，并且IP所属区域不属于当前公司所在区域，猜测可能打到子公司下（通过爱企查发现存在多家控股子公司，其中一家子公司区域与所属地IP相同）。最后只拿到了ActiveMQ，elasticsearch数据库，和另一台Solr服务器。</p>
+<p><img src="/images/content/Snipaste_2023-11-13_10-04-40.png" alt="Alt text"></p>
+<h3 id="华为云AK-SK"><a href="#华为云AK-SK" class="headerlink" title="华为云AK&#x2F;SK"></a>华为云AK&#x2F;SK</h3><p>通过资产收集，收集到一个自研网站。前台有帮助文档和其他功能点，后台需要账号密码登录，使用常规的弱口令尝试后无果，在帮助文档存在说明初始账号密码都为员工的手机号，尝试<code>13333333333</code>这样的测试账号后没有成功，后面发现文档中泄露了几个手机号成功利用一个手机号登录后台。拿到9w+的客户信息，但是没达到三要素不给分。</p>
+<p><img src="/images/content/Snipaste_2023-11-13_10-11-59.png" alt="Alt text"></p>
+<p>后面在bp中抓到个config的包泄露了AK&#x2F;SK，有接管云平台的权限，利用<a target="_blank" rel="noopener" href="https://github.com/teamssix/cf/releases">cf</a>接管云平台。</p>
+<p><img src="/images/content/Snipaste_2023-11-13_10-13-58.png" alt="Alt text"></p>
+<p>云服务平台拿到2台云服务器4个bucket桶，当时绝对没有必要就没有继续深入去收集信息，bucket和服务器上可能会泄露一些敏感文件之类的东西。</p>
+<p><img src="/images/content/Snipaste_2023-11-13_10-14-34.png" alt="Alt text"></p>
+<h3 id="致远OA弱口令-后台RCE"><a href="#致远OA弱口令-后台RCE" class="headerlink" title="致远OA弱口令-&gt;后台RCE"></a>致远OA弱口令-&gt;后台RCE</h3><p>通过资产收集，收集到致远OA的资产。利用Apt_tools，Exp_tools等工具一键利用没有成功，找一些漏洞库去尝试漏洞利用发现都修了。通过暴力破解发现存在大量弱口令。登录后通讯录中有个信息运维部，发现该部门中的一个用户存在弱口令。</p>
+<p><img src="/images/content/Snipaste_2023-11-13_10-15-54.png" alt="Alt text"></p>
+<p>并且该用户拥有管理员权限，能够上传压缩文件getshell。上传压缩文件的具体流程可以参考这篇<a target="_blank" rel="noopener" href="https://blog.51cto.com/u_15127579/2778196">文章</a></p>
+<p><img src="/images/content/Snipaste_2023-11-13_10-17-08.png" alt="Alt text"></p>
+<h2 id="内网横向"><a href="#内网横向" class="headerlink" title="内网横向"></a>内网横向</h2><p>拿到webshell后的步骤一般就是判断主机是否出网，挂条隧道，上线CS，权限维持，收集主机内的文件信息看有没有密码本之类的东西，抓取主机密码先来一波密码复用，然后再构造密码看有没有漏网之鱼，用<a target="_blank" rel="noopener" href="https://github.com/shmilylty/netspy">netspy</a>探测可达网段，用<a target="_blank" rel="noopener" href="https://github.com/shadow1ng/fscan">Fscan</a>或者<a target="_blank" rel="noopener" href="https://github.com/1n7erface/Template">Template</a>先扫C段横向几台，然后直接开扫。</p>
+<p>我这边拿到webshell后发现主机存在杀软（火绒），机器出网。做个免杀马上线CS，利用计划任务进行权限维持（将进程先迁移到白名单进程（如svchost.exe）后，再进行计划任务创建），抓到密码是XXX2017，XXX是公司名。这个时候我就去做一些密码本例如XXX2023，XXX2022，XXX@2021之后统一去暴破。但是它这里面装了火绒终端管理器，这里是fscan扫webTitle时发现了两台，其中一台用<code>admin/admin</code>直接进去了，但是只控制了一台终端。另一台没进去，估计其他终端都在那台上面管控着。</p>
+<p><img src="/images/content/Snipaste_2023-11-13_10-30-23.png" alt="Alt text"></p>
+<p>火绒会拦击暴破行为，所以做的密码本就没用了。但是最后还是扫到几台Linux服务器的弱口令，和5台密码复用的服务器，和密码复用的sql server。</p>
+<p><img src="/images/content/Snipaste_2023-11-13_10-25-42.png" alt="Alt text"></p>
+<p><img src="/images/content/Snipaste_2023-11-13_10-27-02.png" alt="Alt text"></p>
+<p><img src="/images/content/Snipaste_2023-11-13_10-29-17.png" alt="Alt text"></p>
+<p>还扫到几个web，尝试几个弱口令进行登录。也扫到17010但是利用时会被火绒拦下来。也扫到了域控和域内主机，但是域控和域内主机没有明显的漏洞像17010，zerologon那些。到这里扫描器能做的事情也基本结束了。接下来就是去拿到权限的主机上面去进行信息收集，然后将这些信息进行整合。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#Windows收集文件命令</span></span><br><span class="line"><span class="built_in">dir</span> /a /s /b c:\*.txt *.xls *.xlsx *.docx |findstr <span class="string">&quot;密码&quot;</span> &gt; ret.txt</span><br><span class="line"><span class="comment">#Linux收集文件命令</span></span><br><span class="line">find / -name <span class="string">&quot;*.properties&quot;</span> -o -name <span class="string">&quot;*.yaml&quot;</span> -name <span class="string">&quot;*.yml&quot;</span> &gt; ret.txt</span><br></pre></td></tr></table></figure>
+
+<p>在之前控制的Windows和Linux上面没有找到密码本之类的东西，浏览器记录中也没有发现密码。倒是在其中一台Windows的<code>mstsc</code>远程连接记录中发现保存着一个域内个人PC连接记录（XXXDomain\UserName），没有密码，但是试了下直接用123456登了进去。</p>
+<p><img src="/images/content/Snipaste_2023-11-13_10-31-42.png" alt="Alt text"></p>
+<p>进去后赶紧上了CS，因为是将别人顶掉登进去的。发现确实是域内主机，拿到域内主机后查看域内用户，发现用户名命名规则和OA上的用户名是一样的都是姓名的拼音缩写，并且域管有十几个。想到有这么多弱口令的用户，域管应该也有弱口令。用123456挨个试了一下发现一个域管用户直接登进域控。</p>
+<p><img src="/images/content/Snipaste_2023-11-13_10-33-19.png" alt="Alt text"></p>
+<p>在查看域控的时候发现有三台域控，两台是主辅域的关系，还有一台是另外的域，但都能通过这个域管账号登录。每个域控都控制200多台主机。</p>
+<p><img src="/images/content/Snipaste_2023-11-13_20-17-26.png" alt="Alt text"></p>
+<p>拿下域控后4000分到手，要进一步扩大战果就要枚举域内主机，查看每台机器桌面的文件（很多人喜欢把密码本之类的文件放到桌面上）。可以用<a target="_blank" rel="noopener" href="https://github.com/wangfly-me/DomainInfo_Find">DomainInfo_Find</a>这个工具来实现。但是当时我已经拿到OA上所有员工的用户名，并且知道了哪个员工是哪些部门的。那么接下来直接去找信息运维部的员工，密码本之类的东西大概率就在运维部人员登过的服务器上。这里直接用CS的插件来<code>查询指定用户当前登录的主机</code>，也可以自己用下面的工具命令进行查找。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">PVEFindADUser.exe -current Domain\XXXUSER</span><br></pre></td></tr></table></figure>
+
+<p>发现运维主管曾经登录过3台服务器上，利用域管账号上去看收集服务器信息，在其中一台的D盘上发现了密码本，</p>
+<p><img src="/images/content/Snipaste_2023-11-13_10-35-08.png" alt="Alt text"></p>
+<p>基本上公司所有的服务器、路由器、交换机、防火墙那些都涵盖了，本地的云上的都有。至此这家单位也宣告出局了。</p>
+<p><img src="/images/content/Snipaste_2023-11-14_14-52-07.png" alt="Alt text"></p>
+<p><img src="/images/content/Snipaste_2023-11-13_20-46-47.png" alt="Alt text"></p>
+<p><img src="/images/content/Snipaste_2023-11-13_20-45-22.png" alt="Alt text"></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://example.com">dandeny</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2023/11/14/%E6%9F%90%E7%A7%91%E6%8A%80%E8%82%A1%E4%BB%BD%E5%85%AC%E5%8F%B8HW%E5%B0%8F%E7%BB%93/">http://example.com/2023/11/14/%E6%9F%90%E7%A7%91%E6%8A%80%E8%82%A1%E4%BB%BD%E5%85%AC%E5%8F%B8HW%E5%B0%8F%E7%BB%93/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">dandeny's blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"></div><div class="post_share"><div class="social-share" data-image="/images/bg/71wgohfPHqXRbG9.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2023/11/13/%E4%B8%80%E4%BA%9B%E7%BB%95%E8%BF%87%E9%98%B2%E6%8A%A4%E7%9A%84%E6%89%93%E7%82%B9%E8%AE%B0%E5%BD%95/" title="一些绕过防护的打点记录"><img class="cover" src="/images/bg/gcnavZbmepS8d4u.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">一些绕过防护的打点记录</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/images/bg/941d9457d1adf41dd8022e5edbc284a1.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">dandeny</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">6</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/sdandeny"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E6%9C%9F%E6%89%93%E7%82%B9"><span class="toc-number">1.</span> <span class="toc-text">前期打点</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Solr-RCE"><span class="toc-number">1.1.</span> <span class="toc-text">Solr RCE</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8D%8E%E4%B8%BA%E4%BA%91AK-SK"><span class="toc-number">1.2.</span> <span class="toc-text">华为云AK&#x2F;SK</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%87%B4%E8%BF%9COA%E5%BC%B1%E5%8F%A3%E4%BB%A4-%E5%90%8E%E5%8F%B0RCE"><span class="toc-number">1.3.</span> <span class="toc-text">致远OA弱口令-&gt;后台RCE</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%86%85%E7%BD%91%E6%A8%AA%E5%90%91"><span class="toc-number">2.</span> <span class="toc-text">内网横向</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2023/11/14/%E6%9F%90%E7%A7%91%E6%8A%80%E8%82%A1%E4%BB%BD%E5%85%AC%E5%8F%B8HW%E5%B0%8F%E7%BB%93/" title="某科技股份公司HW小结"><img src="/images/bg/71wgohfPHqXRbG9.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="某科技股份公司HW小结"/></a><div class="content"><a class="title" href="/2023/11/14/%E6%9F%90%E7%A7%91%E6%8A%80%E8%82%A1%E4%BB%BD%E5%85%AC%E5%8F%B8HW%E5%B0%8F%E7%BB%93/" title="某科技股份公司HW小结">某科技股份公司HW小结</a><time datetime="2023-11-14T02:33:45.000Z" title="发表于 2023-11-14 10:33:45">2023-11-14</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/11/13/%E4%B8%80%E4%BA%9B%E7%BB%95%E8%BF%87%E9%98%B2%E6%8A%A4%E7%9A%84%E6%89%93%E7%82%B9%E8%AE%B0%E5%BD%95/" title="一些绕过防护的打点记录"><img src="/images/bg/gcnavZbmepS8d4u.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="一些绕过防护的打点记录"/></a><div class="content"><a class="title" href="/2023/11/13/%E4%B8%80%E4%BA%9B%E7%BB%95%E8%BF%87%E9%98%B2%E6%8A%A4%E7%9A%84%E6%89%93%E7%82%B9%E8%AE%B0%E5%BD%95/" title="一些绕过防护的打点记录">一些绕过防护的打点记录</a><time datetime="2023-11-13T14:03:15.000Z" title="发表于 2023-11-13 22:03:15">2023-11-13</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/11/12/%E4%B8%80%E4%BA%9B%E6%84%8F%E5%A4%96%E6%89%93%E7%82%B9%E8%AE%B0%E5%BD%95/" title="一些意外打点记录"><img src="/images/bg/53eTB2uiNRlXwFP.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="一些意外打点记录"/></a><div class="content"><a class="title" href="/2023/11/12/%E4%B8%80%E4%BA%9B%E6%84%8F%E5%A4%96%E6%89%93%E7%82%B9%E8%AE%B0%E5%BD%95/" title="一些意外打点记录">一些意外打点记录</a><time datetime="2023-11-12T12:05:35.000Z" title="发表于 2023-11-12 20:05:35">2023-11-12</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/11/11/%E8%87%AA%E5%BB%BAdnslog%E5%B9%B3%E5%8F%B0%E6%90%AD%E9%85%8Dbp%E6%8F%92%E4%BB%B6/" title="自建dnslog平台搭配bp插件"><img src="/images/bg/gcnavZbmepS8d4u.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="自建dnslog平台搭配bp插件"/></a><div class="content"><a class="title" href="/2023/11/11/%E8%87%AA%E5%BB%BAdnslog%E5%B9%B3%E5%8F%B0%E6%90%AD%E9%85%8Dbp%E6%8F%92%E4%BB%B6/" title="自建dnslog平台搭配bp插件">自建dnslog平台搭配bp插件</a><time datetime="2023-11-11T13:03:17.000Z" title="发表于 2023-11-11 21:03:17">2023-11-11</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/11/10/zerologon%E5%A4%8D%E7%8E%B0/" title="zerologon复现"><img src="/images/bg/xthHmnbdNerWOqP.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="zerologon复现"/></a><div class="content"><a class="title" href="/2023/11/10/zerologon%E5%A4%8D%E7%8E%B0/" title="zerologon复现">zerologon复现</a><time datetime="2023-11-10T12:05:35.000Z" title="发表于 2023-11-10 20:05:35">2023-11-10</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2023 By dandeny</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
